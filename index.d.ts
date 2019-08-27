@@ -42,8 +42,9 @@ declare module 'react-native-biometrics' {
    * returns promise that resolves if the user passes, and
    * rejects if the user fails or cancels
    * @param {string} promptMessage
+   * @param {number} timeout
    * @returns {Promise}  Promise that resolves if the user passes, and
    * rejects if the user fails or cancels
    */
-  function simplePrompt(promptMessage: string): Promise<boolean>;
+  function simplePrompt(promptMessage: string, timeout?: number): Promise<boolean>;
 }

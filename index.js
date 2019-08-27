@@ -52,10 +52,11 @@ export default {
    * returns promise that resolves if the user passes, and
    * rejects if the user fails or cancels
    * @param {string} promptMessage
+   * @param {number} timeout
    * @returns {Promise}  Promise that resolves if the user passes, and
    * rejects if the user fails or cancels
    */
-  simplePrompt: (promptMessage) => {
-    return ReactNativeBiometrics.simplePrompt(promptMessage)
+  simplePrompt: (promptMessage, timeout = 15) => {
+    return ReactNativeBiometrics.simplePrompt(promptMessage, timeout)
   }
 }

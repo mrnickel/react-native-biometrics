@@ -183,6 +183,7 @@ NOTE: This only validates a user's biometrics.  This should not be used to log a
 __Arguments__
 
 - `promptMessage` - string that will be displayed in the fingerprint or face id prompt
+- `timeout` - number number of seconds before we dismiss the fingerprint or face id prompt with error. Defaults to 15 seconds.
 
 __Example__
 
