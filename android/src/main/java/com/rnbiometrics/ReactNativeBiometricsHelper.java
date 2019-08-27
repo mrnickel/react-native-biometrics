@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.rnbiometrics.R;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Created by brandon on 4/5/18.
  */
@@ -25,13 +27,30 @@ public class ReactNativeBiometricsHelper extends FingerprintManager.Authenticati
     private CancellationSignal cancellationSignal;
 
     private boolean selfCancelled;
+    private boolean completed;
 
-    ReactNativeBiometricsHelper(FingerprintManager fingerprintManager, ImageView icon,
+    ReactNativeBiometricsHelper(final Integer timeout, FingerprintManager fingerprintManager, ImageView icon,
                                   TextView errorTextView, ReactNativeBiometricsCallback callback) {
         this.fingerprintManager = fingerprintManager;
         this.icon = icon;
         this.errorTextView = errorTextView;
         this.callback = callback;
+
+        if (timeout > 0) {
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        this.sleep(timeout * 1000);
+                        if (!completed && cancellationSignal != null) {
+                            cancellationSignal.cancel();
+                        }
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                }
+            }.start();
+        }
     }
 
     public void startListening(FingerprintManager.CryptoObject cryptoObject) {
@@ -53,6 +72,7 @@ public class ReactNativeBiometricsHelper extends FingerprintManager.Authenticati
 
     @Override
     public void onAuthenticationError(int errMsgId, CharSequence errString) {
+        completed = true;
         if (!selfCancelled) {
             showError(errString);
             icon.postDelayed(new Runnable() {
@@ -71,11 +91,13 @@ public class ReactNativeBiometricsHelper extends FingerprintManager.Authenticati
 
     @Override
     public void onAuthenticationFailed() {
+        completed = true;
         showError(errorTextView.getResources().getString(R.string.fingerprint_not_recognized));
     }
 
     @Override
     public void onAuthenticationSucceeded(final FingerprintManager.AuthenticationResult result) {
+        completed = true;
         errorTextView.removeCallbacks(resetErrorTextRunnable);
         icon.setImageResource(R.drawable.ic_fingerprint_success);
         errorTextView.setTextColor(errorTextView.getResources().getColor(R.color.success_color, null));

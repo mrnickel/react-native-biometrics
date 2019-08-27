@@ -8,7 +8,7 @@ import android.content.DialogInterface;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +25,7 @@ import com.rnbiometrics.R;
 public class ReactNativeBiometricsDialog extends DialogFragment implements ReactNativeBiometricsCallback {
 
     protected String title;
+    protected Integer timeout;
     protected FingerprintManager.CryptoObject cryptoObject;
     protected ReactNativeBiometricsCallback biometricAuthCallback;
 
@@ -32,8 +33,9 @@ public class ReactNativeBiometricsDialog extends DialogFragment implements React
     protected Activity activity;
     protected Button cancelButton;
 
-    public void init(String title, FingerprintManager.CryptoObject cryptoObject, ReactNativeBiometricsCallback callback) {
+    public void init(String title, Integer timeout, FingerprintManager.CryptoObject cryptoObject, ReactNativeBiometricsCallback callback) {
         this.title = title;
+        this.timeout = timeout;
         this.cryptoObject = cryptoObject;
         this.biometricAuthCallback = callback;
     }
@@ -60,6 +62,7 @@ public class ReactNativeBiometricsDialog extends DialogFragment implements React
         });
 
         biometricAuthenticationHelper = new ReactNativeBiometricsHelper(
+                this.timeout,
                 activity.getSystemService(FingerprintManager.class),
                 (ImageView) view.findViewById(R.id.fingerprint_icon),
                 (TextView) view.findViewById(R.id.fingerprint_status),

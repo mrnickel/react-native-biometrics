@@ -150,7 +150,7 @@ RCT_EXPORT_METHOD(simplePrompt: (NSString *)promptMessage timeout: (nonnull NSNu
             }
         }];
         
-        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * timeout);
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * [timeout intValue]);
         dispatch_after(delay, dispatch_get_main_queue(), ^(void){
             if (!complete) {
                 [context invalidate];
