@@ -9,7 +9,7 @@
     "clean": "rm -rf lib && rm -rf node_modules && npm install",
     "build": "babel index.js -d lib",
     "release": "npm run clean && npm run build && npm publish",
-    "install": "babel index.js -d lib"
+    "install": "npm install && npm run babel index.js -d lib"
   },
   "keywords": [
     "react-native",
